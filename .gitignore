@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Generated data and reports
+data/raw/*
+!data/raw/.gitkeep
+reports/figures/*.png
+reports/metrics.json
+# ...except the two figures the README embeds.
+!reports/figures/regression_line.png
+!reports/figures/expensive_neighbourhoods.png
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
+*.swp
+
+# Notebooks
+.ipynb_checkpoints/
