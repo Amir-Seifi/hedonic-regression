@@ -45,11 +45,8 @@ def load_raw(
     cache_path: Path = config.CACHED_DATA_FILE,
     refresh: bool = False,
 ) -> pd.DataFrame:
-    """Return the raw dataset as a DataFrame.
-
-    A local CSV path is read directly. Otherwise the dataset is downloaded
-    once and cached under ``data/raw`` so later runs work offline; pass
-    ``refresh=True`` to force a fresh download.
+    """A local path is read directly; a URL is downloaded once and cached
+    under ``data/raw`` so later runs work offline.
     """
     if source is not None and Path(source).exists():
         logger.info("Reading dataset from %s", source)
@@ -93,11 +90,10 @@ def clean(
     max_area: float = config.MAX_AREA_M2,
     price_upper_quantile: float = config.PRICE_UPPER_QUANTILE,
 ) -> tuple[pd.DataFrame, CleaningReport]:
-    """Clean the raw dataset and report what was removed.
+    """Returns the cleaned frame and a per-step count of what was removed.
 
-    Steps: validate columns, parse ``Area`` (stored as a string with thousands
-    separators), drop duplicates and missing values, keep areas inside a
-    plausible range, drop the extreme price tail, and add ``Price_Bn``.
+    Order matters: duplicates go first so the counts below do not attribute
+    the same bad row to two different steps.
     """
     missing_columns = [c for c in config.REQUIRED_RAW_COLUMNS if c not in df.columns]
     if missing_columns:
@@ -156,7 +152,6 @@ def load_clean(
     refresh: bool = False,
     **clean_kwargs: float,
 ) -> tuple[pd.DataFrame, CleaningReport]:
-    """Convenience wrapper: load the raw dataset and clean it."""
     return clean(load_raw(source, refresh=refresh), **clean_kwargs)
 
 

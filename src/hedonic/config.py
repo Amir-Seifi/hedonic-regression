@@ -39,11 +39,10 @@ REQUIRED_RAW_COLUMNS = [*NUMERIC_FEATURES, ADDRESS, PRICE]
 # rather than real apartments (the raw file contains areas above 10,000 m2).
 MIN_AREA_M2 = 30.0
 MAX_AREA_M2 = 500.0
-# Drop the extreme right tail of prices, which is dominated by a handful of
-# luxury outliers that a linear model cannot represent anyway.
+# Trims the extreme right tail, so reported metrics describe the trimmed
+# distribution rather than the whole market.
 PRICE_UPPER_QUANTILE = 0.995
 
-# Modelling defaults.
 TEST_SIZE = 0.2
 RANDOM_STATE = 42
 # Neighbourhoods with fewer listings than this are pooled into a single
@@ -52,7 +51,6 @@ MIN_ADDRESS_FREQUENCY = 10
 RIDGE_ALPHA = 1.0
 LASSO_ALPHA = 0.01
 
-# Plotting defaults.
 MIN_LISTINGS_PER_NEIGHBOURHOOD = 30
 TOP_NEIGHBOURHOODS = 12
 HISTOGRAM_BINS = 50

@@ -52,7 +52,6 @@ def make_split(
     test_size: float = config.TEST_SIZE,
     random_state: int = config.RANDOM_STATE,
 ) -> Split:
-    """Split the data into train and test sets for the given feature columns."""
     X = df[features]
     y = df[config.PRICE_BN]
     X_train, X_test, y_train, y_test = train_test_split(
@@ -67,13 +66,9 @@ def build_pipeline(
     *,
     min_address_frequency: int = config.MIN_ADDRESS_FREQUENCY,
 ) -> Pipeline:
-    """Build a preprocessing + regression pipeline for the given features.
-
-    Preprocessing is part of the pipeline so it is fitted on the training fold
-    only. ``handle_unknown="ignore"`` keeps prediction working for
-    neighbourhoods that appear only in the test set, and ``min_frequency``
-    pools rare neighbourhoods into one column instead of giving each a
-    coefficient estimated from a couple of listings.
+    """Preprocessing sits inside the pipeline so it is fitted on the training
+    fold only. Rare neighbourhoods are pooled rather than each getting a
+    coefficient estimated from two or three listings.
     """
     numeric = [c for c in features if c in config.NUMERIC_FEATURES]
     categorical = [c for c in features if c in config.CATEGORICAL_FEATURES]
@@ -103,7 +98,6 @@ def build_pipeline(
 
 
 def fit_and_score(name: str, pipeline: Pipeline, split: Split) -> ModelResult:
-    """Fit a pipeline on the training set and score it on the test set."""
     pipeline.fit(split.X_train, split.y_train)
     predictions = pipeline.predict(split.X_test)
     return ModelResult(
@@ -122,10 +116,8 @@ def train_all(
     random_state: int = config.RANDOM_STATE,
     min_address_frequency: int = config.MIN_ADDRESS_FREQUENCY,
 ) -> tuple[list[ModelResult], Split, Split]:
-    """Train the baseline and the multi-feature models.
-
-    Returns the results plus both splits: the area-only split (used for the
-    regression-line plot) and the full-feature split.
+    """Returns the results plus both splits; the area-only split is what the
+    regression-line plot is drawn against.
     """
     baseline_features = [config.AREA]
     full_features = [*config.NUMERIC_FEATURES, *config.CATEGORICAL_FEATURES]
@@ -155,17 +147,14 @@ def train_all(
 
 
 def coefficients(result: ModelResult) -> pd.Series:
-    """Coefficients of a fitted pipeline, indexed by feature name.
-
-    Features are standardised inside the pipeline, so the values are directly
-    comparable: each one is the price change (in billion Toman) per one
-    standard deviation of that feature.
+    """Every feature is standardised, so these are directly comparable: each is
+    the price change in billion Toman per standard deviation of that feature.
     """
     preprocess: ColumnTransformer = result.pipeline.named_steps["preprocess"]
     regressor = result.pipeline.named_steps["regressor"]
+    # "numeric__Area" -> "Area", and the pooled column sklearn calls
+    # "<feature>_infrequent_sklearn" gets a readable label.
     names = [
-        # "numeric__Area" -> "Area"; the pooled rare-category column is named
-        # "<feature>_infrequent_sklearn", which is not worth showing verbatim.
         name.split("__", 1)[-1].replace(INFREQUENT_SUFFIX, "_other (rare)")
         for name in preprocess.get_feature_names_out()
     ]
