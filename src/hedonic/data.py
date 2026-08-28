@@ -1,4 +1,4 @@
-"""Loading and cleaning of the Tehran house-price dataset."""
+"""Loading and cleaning of the property-listings dataset."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from house_prices import config
+from hedonic import config
 
 logger = logging.getLogger(__name__)
 

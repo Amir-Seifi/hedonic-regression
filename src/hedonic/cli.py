@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from house_prices import __version__, config, data, modeling, plots
+from hedonic import __version__, config, data, modeling, plots
 
 logger = logging.getLogger(__name__)
 
@@ -27,13 +27,13 @@ def _fraction(value: str) -> float:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="house-prices",
-        description="Analyse and model Tehran apartment prices.",
+        prog="hedonic",
+        description="Fit and compare hedonic price models on property listings.",
     )
     parser.add_argument(
         "--version",
         action="version",
-        version=f"house-prices {__version__}",
+        version=f"hedonic {__version__}",
     )
     parser.add_argument(
         "--data-path",

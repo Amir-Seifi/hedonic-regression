@@ -9,8 +9,8 @@ import matplotlib
 import numpy as np
 import pandas as pd
 
-from house_prices import config
-from house_prices.modeling import ModelResult, Split
+from hedonic import config
+from hedonic.modeling import ModelResult, Split
 
 logger = logging.getLogger(__name__)
 
