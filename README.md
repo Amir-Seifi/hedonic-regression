@@ -1,10 +1,16 @@
-# Tehran House Prices
+# Hedonic Price Regression
 
-[![CI](https://github.com/Amir-Seifi/tehran-house-prices/actions/workflows/ci.yml/badge.svg)](https://github.com/Amir-Seifi/tehran-house-prices/actions/workflows/ci.yml)
+[![CI](https://github.com/Amir-Seifi/hedonic-regression/actions/workflows/ci.yml/badge.svg)](https://github.com/Amir-Seifi/hedonic-regression/actions/workflows/ci.yml)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-Exploratory analysis and linear regression models for apartment prices in Tehran,
-built as a course project. One command cleans the data, writes the figures, trains
-four models and prints a comparison.
+A hedonic price model estimates the value of a good from its attributes. This
+project applies that to residential property listings: area, room count,
+parking / storage / elevator flags and neighbourhood, regressed on sale price.
+
+One command cleans the data, writes the figures, trains four models and prints a
+comparison. Preprocessing is fitted inside the cross-validation boundary, the
+whole pipeline is unit-tested, and every run is reproducible from a seed.
 
 ## Results
 
@@ -21,6 +27,8 @@ Prices are in billion Toman.
 Area is the strongest single predictor (correlation 0.75), but it explains only
 about half the variance on its own. Adding the neighbourhood is what closes the
 gap: location moves the predicted price further than any other feature.
+Regularisation buys nothing here, which is the expected result at this ratio of
+rows to features and is worth reporting as such.
 
 ![Linear regression on area](reports/figures/regression_line.png)
 ![Most expensive neighbourhoods](reports/figures/expensive_neighbourhoods.png)
@@ -30,8 +38,8 @@ gap: location moves the predicted price further than any other feature.
 Requires Python 3.10 or newer.
 
 ```bash
-git clone https://github.com/Amir-Seifi/tehran-house-prices.git
-cd tehran-house-prices
+git clone https://github.com/Amir-Seifi/hedonic-regression.git
+cd hedonic-regression
 python -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
@@ -40,7 +48,7 @@ pip install -e ".[dev]"
 ## Usage
 
 ```bash
-house-prices
+hedonic
 ```
 
 The dataset is downloaded once and cached in `data/raw/`, so later runs work
@@ -64,9 +72,9 @@ Useful flags:
 
 ## Data
 
-[`housePrice.csv`](https://raw.githubusercontent.com/SharifiZarchi/IntroAI/main/Session_04/TehranHouses/housePrice.csv)
-from the SharifiZarchi *IntroAI* course: 3,479 listings with area, number of
-rooms, parking / storage / elevator flags, neighbourhood and price.
+A public dataset of 3,479 residential listings in Tehran, with area, number of
+rooms, parking / storage / elevator flags, neighbourhood and price. Source:
+[`housePrice.csv`](https://raw.githubusercontent.com/SharifiZarchi/IntroAI/main/Session_04/TehranHouses/housePrice.csv).
 
 Cleaning drops 270 rows in total:
 
@@ -78,14 +86,16 @@ Cleaning drops 270 rows in total:
 | Price above the 99.5th percentile |   16 |
 
 `Area` arrives as text with thousands separators (`"1,250"`), so it is parsed to
-a number first. The area bounds remove data-entry errors — the raw file contains
-"apartments" of over 10,000 m². The price cap removes a handful of luxury
-listings that a linear model cannot represent anyway.
+a number first. The area bounds remove data-entry errors: the raw file contains
+"apartments" of over 10,000 m². The price cap trims the extreme right tail, so
+the metrics above describe the trimmed distribution rather than the full market;
+the 16 excluded listings are luxury properties whose prices are driven by
+attributes this dataset does not record.
 
 ## Project layout
 
 ```
-src/house_prices/
+src/hedonic/
   config.py     constants and defaults
   data.py       download, cache, clean, correlations
   modeling.py   split, pipelines, training, coefficients
@@ -103,9 +113,24 @@ Because every feature is standardised, the reported coefficients are directly
 comparable: each is the price change in billion Toman per one standard deviation
 of that feature.
 
+## Scope and next steps
+
+The model class is deliberately linear: the goal is an interpretable coefficient
+per attribute, not the lowest possible error. The natural extensions, in order of
+expected value:
+
+- A gradient-boosted baseline, to quantify what the linear form costs in accuracy.
+- A log-transformed target, since prices are right-skewed and the residuals show it.
+- Cross-validated metrics with a spread, instead of a single split.
+- A `predict` subcommand that scores new listings from a saved model.
+
 ## Development
 
 ```bash
 pytest
 ruff check .
 ```
+
+## License
+
+MIT. See [LICENSE](LICENSE).

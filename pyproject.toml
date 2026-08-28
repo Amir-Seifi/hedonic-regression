@@ -1,12 +1,14 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "house-prices"
-version = "0.1.0"
-description = "Exploratory analysis and linear regression models for Tehran apartment prices."
+name = "hedonic"
+version = "1.0.0"
+description = "Hedonic price regression on residential property listings: reproducible pipeline, CLI and model comparison."
 readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">=3.10"
 dependencies = [
     "matplotlib>=3.7",
@@ -22,7 +24,7 @@ dev = [
 ]
 
 [project.scripts]
-house-prices = "house_prices.cli:main"
+hedonic = "hedonic.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

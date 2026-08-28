@@ -9,8 +9,8 @@ import matplotlib
 import numpy as np
 import pandas as pd
 
-from house_prices import config
-from house_prices.modeling import ModelResult, Split
+from hedonic import config
+from hedonic.modeling import ModelResult, Split
 
 logger = logging.getLogger(__name__)
 
@@ -89,7 +89,9 @@ def expensive_neighbourhoods(
     top_n: int = config.TOP_NEIGHBOURHOODS,
     show: bool = False,
 ) -> Path | None:
-    """Average price of the priciest neighbourhoods with enough listings."""
+    """Neighbourhoods below ``min_listings`` are excluded: a single listing
+    would otherwise put an outlier at the top of the chart.
+    """
     import matplotlib.pyplot as plt
 
     counts = df[config.ADDRESS].value_counts()
@@ -162,7 +164,6 @@ def generate_all(
     *,
     show: bool = False,
 ) -> list[Path]:
-    """Write every figure and return the paths that were created."""
     paths = [
         price_distribution(df, output_dir, show=show),
         area_distribution(df, output_dir, show=show),

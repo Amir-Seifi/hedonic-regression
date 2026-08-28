@@ -4,7 +4,7 @@ import pandas as pd
 import pytest
 from sklearn.linear_model import LinearRegression
 
-from house_prices import config, modeling
+from hedonic import config, modeling
 
 
 def test_split_sizes_match_the_requested_fraction(clean_frame):

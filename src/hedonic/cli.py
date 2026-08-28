@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from house_prices import __version__, config, data, modeling, plots
+from hedonic import __version__, config, data, modeling, plots
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +18,6 @@ TOP_COEFFICIENTS = 10
 
 
 def _fraction(value: str) -> float:
-    """An argparse type for a strictly-between-0-and-1 float."""
     number = float(value)
     if not 0.0 < number < 1.0:
         raise argparse.ArgumentTypeError(f"must be between 0 and 1, got {value}")
@@ -27,13 +26,13 @@ def _fraction(value: str) -> float:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="house-prices",
-        description="Analyse and model Tehran apartment prices.",
+        prog="hedonic",
+        description="Fit and compare hedonic price models on property listings.",
     )
     parser.add_argument(
         "--version",
         action="version",
-        version=f"house-prices {__version__}",
+        version=f"hedonic {__version__}",
     )
     parser.add_argument(
         "--data-path",
@@ -88,7 +87,6 @@ def _section(title: str) -> None:
 
 
 def _example_listing(df: pd.DataFrame) -> dict[str, object]:
-    """A typical listing used to demonstrate a prediction."""
     return {
         config.AREA: EXAMPLE_AREA,
         config.ROOM: 2,
@@ -121,7 +119,7 @@ def run(args: argparse.Namespace) -> int:
     print("\nMAE and RMSE are in billion Toman.")
 
     best = max(results, key=lambda result: result.r2)
-    _section(f"Standardised coefficients — {best.name}")
+    _section(f"Standardised coefficients: {best.name}")
     coefficients = modeling.coefficients(best)
     print("Largest positive effect on price:")
     print(coefficients.head(TOP_COEFFICIENTS).round(3).to_string())

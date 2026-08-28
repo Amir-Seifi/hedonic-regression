@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from house_prices import __version__, cli, config
+from hedonic import __version__, cli, config
 
 
 def test_end_to_end_run_writes_metrics_and_figures(tmp_path, clean_frame, capsys):

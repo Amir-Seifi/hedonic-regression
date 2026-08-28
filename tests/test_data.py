@@ -3,7 +3,7 @@ from __future__ import annotations
 import pandas as pd
 import pytest
 
-from house_prices import config, data
+from hedonic import config, data
 
 
 def test_clean_parses_area_with_thousands_separator(raw_frame):
