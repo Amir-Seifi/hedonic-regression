@@ -1,0 +1,95 @@
+{
+  "source_sha256": "fbf022a1cad47163cef93b0b60bc7beddc8258b90f227aea2eab6d76544f70fd",
+  "versions": {
+    "numpy": "2.3.5",
+    "pandas": "2.2.3",
+    "scikit-learn": "1.8.0",
+    "matplotlib": "3.10.8"
+  },
+  "seed": 42,
+  "test_size": 0.2,
+  "cleaning": {
+    "rows_raw": 3479,
+    "rows_clean": 3225,
+    "dropped_duplicates": 208,
+    "dropped_missing": 23,
+    "dropped_area_range": 23,
+    "dropped_nonpositive_prices": 0
+  },
+  "train_rows": 2580,
+  "test_rows": 645,
+  "cv_folds": 5,
+  "selection": "Lowest mean training-fold MAE (billion Toman)",
+  "models": [
+    {
+      "name": "Area only",
+      "alpha": null,
+      "cv_mae": 2.5767173186158745,
+      "cv_rmse": 5.034980514538953,
+      "cv_r2": 0.5356842762037012
+    },
+    {
+      "name": "Property attributes",
+      "alpha": null,
+      "cv_mae": 2.6236976028005605,
+      "cv_rmse": 5.016743973659163,
+      "cv_r2": 0.5398282459072993
+    },
+    {
+      "name": "Attributes + neighbourhood",
+      "alpha": null,
+      "cv_mae": 1.98243209990219,
+      "cv_rmse": 4.25766966593407,
+      "cv_r2": 0.6656608478016617
+    },
+    {
+      "name": "Ridge",
+      "alpha": 1.0,
+      "cv_mae": 1.9804285837748719,
+      "cv_rmse": 4.257267285087623,
+      "cv_r2": 0.6661222764266588
+    },
+    {
+      "name": "Lasso",
+      "alpha": 0.001,
+      "cv_mae": 1.981390585184656,
+      "cv_rmse": 4.257897072425342,
+      "cv_r2": 0.6657005009171135
+    },
+    {
+      "name": "Log-log Ridge",
+      "alpha": 0.1,
+      "cv_mae": 1.4493754397700551,
+      "cv_rmse": 3.8263215982323553,
+      "cv_r2": 0.7356481027715571
+    }
+  ],
+  "selected_model": "Log-log Ridge",
+  "selected_alpha": 0.1,
+  "test": {
+    "negative_predictions": 0,
+    "r2": 0.844967847596322,
+    "mae": 1.3134825272069297,
+    "rmse": 2.892526949150596
+  },
+  "matched_listings": [
+    {
+      "Area": 100.0,
+      "Room": 2,
+      "Parking": 1,
+      "Warehouse": 1,
+      "Elevator": 1,
+      "Address": "Punak",
+      "predicted_bn": 4.506802567259324
+    },
+    {
+      "Area": 100.0,
+      "Room": 2,
+      "Parking": 1,
+      "Warehouse": 1,
+      "Elevator": 1,
+      "Address": "Gheitarieh",
+      "predicted_bn": 6.6882653674019386
+    }
+  ]
+}
